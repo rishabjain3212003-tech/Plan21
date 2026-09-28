@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CA Final Lecture Planner</title>
+<meta name="theme-color" content="#0f172a">
+<style>
+:root{
+  --bg:#f4f7fb;
+  --card:#ffffff;
+  --text:#152033;
+  --muted:#718096;
+  --line:#e7ecf3;
+  --navy:#0f172a;
+  --blue:#2563eb;
+  --blue2:#3b82f6;
+  --green:#16a34a;
+  --amber:#d97706;
+  --red:#dc2626;
+  --soft:#eef4ff;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  background:linear-gradient(180deg,#edf3ff 0,#f7f9fc 300px,#f4f7fb 100%);
+  color:var(--text);
+}
+.container{max-width:1120px;margin:auto;padding:20px}
+.hero{
+  background:linear-gradient(135deg,#0f172a,#1e3a8a);
+  color:white;
+  border-radius:22px;
+  padding:24px;
+  box-shadow:0 14px 35px rgba(15,23,42,.18);
+  margin-bottom:18px;
+}
+.hero-top{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;opacity:.72;font-weight:700}
+h1{margin:7px 0 7px;font-size:31px;line-height:1.1}
+.hero p{margin:0;color:#cbd5e1;font-size:14px}
+.target-pill{
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.15);
+  padding:10px 13px;
+  border-radius:14px;
+  text-align:right;
+  white-space:nowrap;
+}
+.target-pill small{display:block;color:#cbd5e1;margin-bottom:2px}
+.target-pill strong{font-size:15px}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+  margin-bottom:18px;
+}
+.stat,.panel,.subject-card{
+  background:rgba(255,255,255,.96);
+  border:1px solid var(--line);
+  border-radius:18px;
+  box-shadow:0 8px 22px rgba(15,23,42,.05);
+}
+.stat{padding:16px}
+.stat span{display:block;color:var(--muted);font-size:12px;margin-bottom:6px}
+.stat strong{font-size:25px}
+.stat small{display:block;color:var(--muted);font-size:11px;margin-top:4px}
+
+.section-title{
+  display:flex;
+  justify-content:space-between;
+  align-items:end;
+  gap:12px;
+  margin:20px 0 10px;
+}
+.section-title h2{margin:0;font-size:20px}
+.section-title p{margin:0;color:var(--muted);font-size:12px}
+
+.subject-grid{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:10px;
+}
+.subject-card{padding:14px}
+.subject-name{font-size:18px;font-weight:800}
+.faculty{font-size:11px;color:var(--muted);min-height:30px;margin-top:3px}
+.input-row{display:flex;gap:7px;margin-top:12px;align-items:center}
+.input-row input{
+  width:100%;
+  border:1px solid #d7deea;
+  border-radius:10px;
+  padding:9px 10px;
+  font-size:16px;
+  font-weight:700;
+  color:var(--text);
+  outline:none;
+}
+.input-row input:focus{border-color:#93b4ff;box-shadow:0 0 0 3px #e8f0ff}
+.total-label{font-size:12px;color:var(--muted);white-space:nowrap}
+.bar{height:8px;background:#edf1f7;border-radius:99px;overflow:hidden;margin:11px 0 7px}
+.bar > div{height:100%;background:linear-gradient(90deg,var(--blue),#60a5fa);border-radius:99px}
+.subject-meta{display:flex;justify-content:space-between;color:var(--muted);font-size:11px}
+
+.panel{padding:18px;margin-top:12px}
+.panel-head{
+  display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:12px
+}
+.panel-head h2{margin:0;font-size:20px}
+.panel-head p{margin:4px 0 0;color:var(--muted);font-size:12px}
+.badge{
+  padding:7px 10px;border-radius:999px;background:var(--soft);color:#1d4ed8;
+  font-size:12px;font-weight:700;white-space:nowrap
+}
+
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:14px}
+table{width:100%;border-collapse:collapse;min-width:760px;background:white}
+th,td{padding:11px 10px;border-bottom:1px solid #eef1f5;text-align:center;font-size:13px}
+th{background:#f8fafc;color:#64748b;font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+th:first-child,td:first-child{text-align:left}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:#fbfdff}
+.total-cell{font-weight:800;color:#0f172a}
+.subject-cell{font-weight:700}
+
+.plan-summary{
+  display:grid;
+  grid-template-columns:1.2fr 1fr;
+  gap:12px;
+  margin-top:12px;
+}
+.message{
+  background:#eff6ff;border:1px solid #dbeafe;border-radius:14px;padding:14px;
+  font-size:13px;line-height:1.55;color:#29405f
+}
+.message strong{color:#172033}
+.today-card{
+  background:#f8fafc;border:1px solid var(--line);border-radius:14px;padding:14px;
+}
+.today-card h3{margin:0 0 8px;font-size:15px}
+.today-list{display:flex;flex-wrap:wrap;gap:7px}
+.chip{
+  border-radius:999px;padding:7px 10px;background:white;border:1px solid #dde5f0;
+  font-size:12px;font-weight:700
+}
+
+.actions{display:flex;gap:8px;justify-content:flex-end;margin-top:12px;flex-wrap:wrap}
+button{
+  border:0;border-radius:10px;padding:9px 12px;font-weight:700;font-size:12px;cursor:pointer
+}
+.secondary{background:#eef2f7;color:#334155}
+.danger{background:#fff1f2;color:#be123c}
+.footer{text-align:center;color:var(--muted);font-size:11px;padding:18px 0 5px}
+
+@media(max-width:900px){
+  .subject-grid{grid-template-columns:repeat(2,1fr)}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .plan-summary{grid-template-columns:1fr}
+}
+@media(max-width:560px){
+  .container{padding:12px}
+  .hero{padding:18px;border-radius:18px}
+  .hero-top{display:block}
+  h1{font-size:26px}
+  .target-pill{margin-top:14px;text-align:left;display:inline-block}
+  .stats{gap:8px}
+  .stat{padding:13px}
+  .stat strong{font-size:21px}
+  .subject-grid{grid-template-columns:1fr}
+  .panel{padding:13px}
+  .section-title{align-items:flex-start;flex-direction:column}
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <section class="hero">
+    <div class="hero-top">
+      <div>
+        <div class="eyebrow">CA Final • May 2027</div>
+        <h1>Lecture Completion Planner</h1>
+        <p>Update only your completed lecture numbers. Your full plan recalculates automatically.</p>
+      </div>
+      <div class="target-pill">
+        <small>Lecture completion target</small>
+        <strong>31 December 2026</strong>
+      </div>
+    </div>
+  </section>
+
+  <section class="stats">
+    <div class="stat">
+      <span>Completed</span>
+      <strong id="completedStat">0</strong>
+      <small id="completedPct">0% overall</small>
+    </div>
+    <div class="stat">
+      <span>Remaining</span>
+      <strong id="remainingStat">0</strong>
+      <small>lectures left</small>
+    </div>
+    <div class="stat">
+      <span>Daily pace</span>
+      <strong id="dailyStat">0</strong>
+      <small>lectures/day</small>
+    </div>
+    <div class="stat">
+      <span>Weekly pace</span>
+      <strong id="weeklyStat">0</strong>
+      <small>lectures/week</small>
+    </div>
+  </section>
+
+  <div class="section-title">
+    <div>
+      <h2>Update Your Progress</h2>
+      <p>Enter only the latest completed lecture number for each subject.</p>
+    </div>
+  </div>
+
+  <section class="subject-grid" id="subjectGrid"></section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <div>
+        <h2>Next 7-Day Target</h2>
+        <p>This adjusts automatically after every progress update.</p>
+      </div>
+      <div class="badge" id="daysBadge">— days left</div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Subject</th>
+            <th>Current</th>
+            <th>Remaining</th>
+            <th>Avg lecture</th>
+            <th>This week</th>
+          </tr>
+        </thead>
+        <tbody id="nextWeekTable"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <div>
+        <h2>Week-by-Week Planner</h2>
+        <p>Your remaining lectures are distributed across the weeks left till 31 December.</p>
+      </div>
+      <div class="badge">Auto Planner</div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Week</th>
+            <th>FR</th>
+            <th>Audit</th>
+            <th>AFM</th>
+            <th>DT</th>
+            <th>GST</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody id="weeklyPlanner"></tbody>
+      </table>
+    </div>
+
+    <div class="plan-summary">
+      <div class="message" id="planMessage"></div>
+      <div class="today-card">
+        <h3>Suggested focus today</h3>
+        <div class="today-list" id="todayFocus"></div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="secondary" onclick="exportProgress()">Export Progress</button>
+      <button class="secondary" onclick="document.getElementById('importFile').click()">Restore Progress</button>
+      <input id="importFile" type="file" accept=".json" style="display:none" onchange="importProgress(event)">
+      <button class="danger" onclick="resetProgress()">Reset</button>
+    </div>
+  </section>
+
+  <div class="footer">Progress is saved automatically in this browser.</div>
+</div>
+
+<script>
+const TARGET = new Date("2026-12-31T23:59:59");
+const STORAGE_KEY = "caFinalLecturePlannerPremiumV2";
+
+const defaults = [
+  {name:"FR", faculty:"CA Aakash Kandoi", total:110, completed:68, hours:2.5},
+  {name:"Audit", faculty:"CA Rishabh Jain", total:55, completed:0, hours:2.5},
+  {name:"AFM", faculty:"CA Adish Jain", total:81, completed:0, hours:3.25},
+  {name:"DT", faculty:"BB Sir", total:71, completed:0, hours:3.5},
+  {name:"GST", faculty:"CA Akshansh Garg", total:50, completed:0, hours:3}
+];
+
+function cloneDefaults(){ return JSON.parse(JSON.stringify(defaults)); }
+
+let subjects;
+try{
+  subjects = JSON.parse(localStorage.getItem(STORAGE_KEY)) || cloneDefaults();
+  if(!Array.isArray(subjects) || subjects.length !== 5) subjects = cloneDefaults();
+}catch(e){
+  subjects = cloneDefaults();
+}
+
+function save(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(subjects));
+}
+
+function formatHours(h){
+  const hours = Math.floor(h);
+  const mins = Math.round((h-hours)*60);
+  if(mins===0) return `${hours}h`;
+  return `${hours}h ${mins}m`;
+}
+
+function daysLeft(){
+  const now = new Date();
+  return Math.max(1, Math.ceil((TARGET-now)/86400000));
+}
+
+function dateLabel(d){
+  return d.toLocaleDateString("en-GB",{day:"2-digit",month:"short"});
+}
+
+function updateSubject(index,value){
+  let n = parseInt(value || "0",10);
+  if(Number.isNaN(n)) n=0;
+  n = Math.max(0,Math.min(subjects[index].total,n));
+  subjects[index].completed=n;
+  save();
+  render();
+}
+
+function remainingTotal(){
+  return subjects.reduce((sum,s)=>sum+(s.total-s.completed),0);
+}
+
+function buildWeeklyAllocations(){
+  const now = new Date();
+  now.setHours(0,0,0,0);
+  const end = new Date(TARGET);
+  end.setHours(23,59,59,999);
+
+  const weeks=[];
+  let cursor=new Date(now);
+
+  while(cursor<=end){
+    const weekStart=new Date(cursor);
+    const weekEnd=new Date(cursor);
+    weekEnd.setDate(weekEnd.getDate()+6);
+    if(weekEnd>end) weekEnd.setTime(end.getTime());
+    weeks.push({start:weekStart,end:weekEnd});
+    cursor=new Date(weekEnd);
+    cursor.setDate(cursor.getDate()+1);
+  }
+
+  const allocations = weeks.map(w=>({
+    start:w.start,end:w.end,
+    values:new Array(subjects.length).fill(0)
+  }));
+
+  subjects.forEach((s,si)=>{
+    let rem=s.total-s.completed;
+    const n=weeks.length;
+    if(rem<=0 || n===0) return;
+
+    // Evenly spread lectures across remaining weeks, slightly front-loaded.
+    let base=Math.floor(rem/n);
+    let extra=rem % n;
+    for(let wi=0; wi<n; wi++){
+      allocations[wi].values[si]=base+(wi<extra?1:0);
+    }
+  });
+
+  return allocations;
+}
+
+function renderSubjects(){
+  const grid=document.getElementById("subjectGrid");
+  grid.innerHTML="";
+  subjects.forEach((s,i)=>{
+    const rem=s.total-s.completed;
+    const pct=Math.round((s.completed/s.total)*100);
+    grid.innerHTML += `
+      <div class="subject-card">
+        <div class="subject-name">${s.name}</div>
+        <div class="faculty">${s.faculty}</div>
+        <div class="input-row">
+          <input aria-label="${s.name} lectures completed" type="number" min="0" max="${s.total}"
+            value="${s.completed}" onchange="updateSubject(${i},this.value)">
+          <div class="total-label">/ ${s.total}</div>
+        </div>
+        <div class="bar"><div style="width:${pct}%"></div></div>
+        <div class="subject-meta">
+          <span>${pct}% done</span>
+          <span>${rem} left</span>
+        </div>
+      </div>`;
+  });
+}
+
+function renderStats(){
+  const total=subjects.reduce((a,s)=>a+s.total,0);
+  const completed=subjects.reduce((a,s)=>a+s.completed,0);
+  const remaining=total-completed;
+  const days=daysLeft();
+  const daily=remaining/days;
+  const weekly=daily*7;
+
+  document.getElementById("completedStat").textContent=`${completed}/${total}`;
+  document.getElementById("completedPct").textContent=`${Math.round(completed/total*100)}% overall`;
+  document.getElementById("remainingStat").textContent=remaining;
+  document.getElementById("dailyStat").textContent=remaining===0?"0":daily.toFixed(1);
+  document.getElementById("weeklyStat").textContent=remaining===0?"0":Math.ceil(weekly);
+  document.getElementById("daysBadge").textContent=`${days} days left`;
+}
+
+function renderNextWeek(allocations){
+  const tbody=document.getElementById("nextWeekTable");
+  tbody.innerHTML="";
+  const first=allocations[0];
+
+  subjects.forEach((s,i)=>{
+    const rem=s.total-s.completed;
+    const target=first ? Math.min(first.values[i],rem) : 0;
+    tbody.innerHTML += `
+      <tr>
+        <td class="subject-cell">${s.name}</td>
+        <td>${s.completed}/${s.total}</td>
+        <td>${rem}</td>
+        <td>${formatHours(s.hours)}</td>
+        <td class="total-cell">${target}</td>
+      </tr>`;
+  });
+}
+
+function renderWeeklyPlanner(allocations){
+  const tbody=document.getElementById("weeklyPlanner");
+  tbody.innerHTML="";
+
+  allocations.forEach((w,wi)=>{
+    const total=w.values.reduce((a,b)=>a+b,0);
+    if(total===0 && wi>0) return;
+    const label = `${dateLabel(w.start)} – ${dateLabel(w.end)}`;
+    tbody.innerHTML += `
+      <tr>
+        <td><strong>W${wi+1}</strong><br><span style="font-size:11px;color:#718096">${label}</span></td>
+        <td>${w.values[0]}</td>
+        <td>${w.values[1]}</td>
+        <td>${w.values[2]}</td>
+        <td>${w.values[3]}</td>
+        <td>${w.values[4]}</td>
+        <td class="total-cell">${total}</td>
+      </tr>`;
+  });
+}
+
+function renderMessage(allocations){
+  const rem=remainingTotal();
+  const days=daysLeft();
+  const totalHours=subjects.reduce((sum,s)=>sum+(s.total-s.completed)*s.hours,0);
+  const perDay=rem/days;
+  const hoursDay=totalHours/days;
+  const first=allocations[0];
+  const weekTotal=first?first.values.reduce((a,b)=>a+b,0):0;
+
+  let html;
+  if(rem===0){
+    html="<strong>All lectures are complete.</strong> Your lecture planner is finished. You can move fully into revision, questions, RTP/MTP and tests.";
+  } else {
+    html=`You have <strong>${rem} lectures</strong> left. To finish by <strong>31 December 2026</strong>, 
+      your current pace is about <strong>${perDay.toFixed(1)} lectures/day</strong>. 
+      Your next 7-day target is <strong>${weekTotal} lectures</strong>. 
+      Remaining lecture content is approximately <strong>${totalHours.toFixed(1)} hours</strong> at 1× speed.`;
+  }
+  document.getElementById("planMessage").innerHTML=html;
+}
+
+function renderTodayFocus(allocations){
+  const wrap=document.getElementById("todayFocus");
+  wrap.innerHTML="";
+  const first=allocations[0];
+  const days=Math.max(1, Math.min(7, Math.ceil((first.end-first.start)/86400000)+1));
+
+  if(!first || remainingTotal()===0){
+    wrap.innerHTML='<span class="chip">No lectures pending</span>';
+    return;
+  }
+
+  const targets=subjects.map((s,i)=>({
+    name:s.name,
+    target:first.values[i],
+    daily:first.values[i]/days,
+    hours:s.hours
+  })).filter(x=>x.target>0)
+    .sort((a,b)=>b.daily-a.daily);
+
+  // Simple suggested daily mix: highest pressure subjects first.
+  let totalSuggested=Math.max(1,Math.ceil(first.values.reduce((a,b)=>a+b,0)/days));
+  let chosen=[];
+  for(const t of targets){
+    if(chosen.length>=totalSuggested) break;
+    chosen.push(t.name);
+  }
+  // If daily target exceeds subjects count, repeat highest pressure subjects.
+  let idx=0;
+  while(chosen.length<totalSuggested && targets.length){
+    chosen.push(targets[idx % targets.length].name);
+    idx++;
+  }
+
+  chosen.forEach((name,idx)=>{
+    const count=chosen.filter((x,j)=>x===name && j<=idx).length;
+    if(idx>0 && chosen.slice(0,idx).includes(name)) return;
+    const n=chosen.filter(x=>x===name).length;
+    wrap.innerHTML += `<span class="chip">${name}${n>1?` × ${n}`:""}</span>`;
+  });
+}
+
+function exportProgress(){
+  const blob=new Blob([JSON.stringify({savedAt:new Date().toISOString(),subjects},null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;
+  a.download="CA-Lecture-Progress.json";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importProgress(event){
+  const file=event.target.files[0];
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=()=>{
+    try{
+      const obj=JSON.parse(reader.result);
+      const imported=obj.subjects || obj;
+      if(!Array.isArray(imported) || imported.length!==5) throw new Error();
+      subjects=imported;
+      save();
+      render();
+      alert("Progress restored successfully.");
+    }catch(e){
+      alert("This backup file is not valid.");
+    }
+    event.target.value="";
+  };
+  reader.readAsText(file);
+}
+
+function resetProgress(){
+  if(confirm("Reset all progress back to the original starting values?")){
+    subjects=cloneDefaults();
+    save();
+    render();
+  }
+}
+
+function render(){
+  renderSubjects();
+  renderStats();
+  const allocations=buildWeeklyAllocations();
+  renderNextWeek(allocations);
+  renderWeeklyPlanner(allocations);
+  renderMessage(allocations);
+  renderTodayFocus(allocations);
+}
+render();
+</script>
+</body>
+</html>
